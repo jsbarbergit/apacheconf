@@ -53,5 +53,5 @@ vhosts:
       - key: ProxyPassReverse
         value: http://localhost:1337/
 # Basic Smoke Test Validation Values
-smoke_test_string: "Reverse Proxy Is Working"
+smoke_test_string: "Welcome to the University of Leodis"
 smoke_test_response: 200
