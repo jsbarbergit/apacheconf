@@ -1,0 +1,30 @@
+---
+- hosts: webservers
+  become: True
+
+  vars_files: 
+    - group_vars/webservers.yaml
+
+  vars:
+    # Default is to install all listed pkgs. Override with --extra-vars"state=absent" 
+    apt_pkg_state: "{{ state | default('present') }}"
+
+    # Update apt cache before running apt cmds
+    apt_cache_update: yes
+ 
+  tasks:
+  - name: Install Webserver Packages
+    include_role: 
+      name: apt-pkg-management
+    vars:
+      apt_pkg_name: "{{ item }}"
+    with_items: "{{ install_pkgs }}"
+
+  - name: Apply Apache Config
+    include_role:
+      name: apache-config-management
+
+  post_tasks:
+    - name: Run Post smoke tests
+      include_tasks: apache-smoke-test.yaml
+      when: apt_pkg_state == 'present'

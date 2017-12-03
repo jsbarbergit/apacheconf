@@ -1,0 +1,4 @@
+[local]
+localhost
+[webservers]
+192.168.0.32

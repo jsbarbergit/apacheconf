@@ -1,0 +1,40 @@
+---
+
+# tasks file for apache-config-management
+
+- name: Remove Disabled vhosts first
+  file:
+    path: "/etc/apache2/sites-enabled/{{ item.key }}"
+    state: absent
+  with_dict: "{{ vhosts }}"
+  when: not item.value.enabled
+  notify:
+    - restart_apache
+
+- name: Enable Apache Modules
+  apache2_module:
+    name: "{{ item.module }}"
+    state: "{{ item.state }}"
+  with_list: "{{ apache_modules }}"
+  notify:
+    - restart_apache
+
+- name: Create VirtualHosts config file
+  template:
+    src: "config_templates/vhost.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ vhost_item.key }}.conf"
+  with_dict: "{{ vhosts }}"
+  loop_control:
+    loop_var: vhost_item
+  when: vhost_item.value.enabled
+  notify:
+    - restart_apache
+
+- name: Enable Configured Sites
+  file:
+    src: "/etc/apache2/sites-available/{{ item.key }}.conf"
+    dest: "/etc/apache2/sites-enabled/{{ item.key }}"
+    state: link
+  when: item.value.enabled
+  with_dict: "{{ vhosts }}"
+
