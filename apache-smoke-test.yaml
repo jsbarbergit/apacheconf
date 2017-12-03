@@ -1,6 +1,6 @@
 - name: SMOKE TEST - Testing Web Service
   uri:
-    url: http://192.168.0.32/
+    url: "http://{{ inventory_hostname }}/"
     method: GET
     return_content: yes
   register: web_response
