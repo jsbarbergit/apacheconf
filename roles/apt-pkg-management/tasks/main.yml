@@ -1,0 +1,8 @@
+---
+# tasks file for apt-pkg-management
+- name: Apt Package Management - Managing {{ apt_pkg_name }} -- Desired state {{ apt_pkg_state }}
+  apt: 
+    name: "{{ apt_pkg_name }}"
+    update_cache: "{{ apt_cache_update }}"
+    state: "{{ apt_pkg_state }}"
+  register: apt_result

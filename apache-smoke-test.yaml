@@ -1,0 +1,10 @@
+- name: SMOKE TEST - Testing Web Service
+  uri:
+    url: "http://{{ inventory_hostname }}/"
+    method: GET
+    return_content: yes
+  register: web_response
+
+- name: SMOKE TEST - Failure Check
+  fail:
+  when: "smoke_test_string not in web_response.content or(web_response.status != smoke_test_response)"

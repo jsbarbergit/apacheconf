@@ -1,0 +1,57 @@
+# SSH Key File
+ansible_ssh_private_key_file: "{{ key_file }}"
+
+# List of all pkgs to install
+install_pkgs:
+  - apache2
+
+# List of Apache modules to enable
+apache_modules:
+  - module: headers
+    state: present
+  - module: proxy
+    state: present
+  - module: proxy_http
+    state: present
+  - module: proxy_connect
+    state: present
+
+httpd_conf_template: "conf_files/apache2.conf" 
+
+# List of all Apache VirtualHost Vars
+vhosts:
+  # Default website - disable
+  000-default:
+    enabled: no
+
+  # Leodis Rev Proxy
+  001-leodisproxy:
+    enabled: yes
+    vhost_name: '*'
+    vhost_port: 80
+    # Set to yes to add Proxy confiug
+    vhost_proxy: yes
+    # Set ServerName and ServerAlias
+    vhost_servername: www.leodis.ac.uk
+    vhost_serveralias: leodis.ac.uk leodis.co.uk www.leodis.co.uk leodis.net www.leodis.net
+    # Enable Proxy Requests
+    vhost_proxyrequests: 'Off'
+    # Define which requests to proxy - * for all
+    vhost_proxyfor: '*'
+    # Key/Value list of options to add under <Proxy> directove
+    vhost_proxyoptions:
+      - key: Order
+        value: deny,allow
+      - key: Allow
+        value: 'from all'
+    # Define Location element
+    vhost_location: yes
+    # Key/Value list of options to add under <Location> directove
+    vhost_locationopts:
+      - key: ProxyPass
+        value: http://localhost:1337/
+      - key: ProxyPassReverse
+        value: http://localhost:1337/
+# Basic Smoke Test Validation Values
+smoke_test_string: "Welcome to the University of Leodis"
+smoke_test_response: 200

@@ -1,0 +1,25 @@
+NameVirtualHost {{ vhost_item.value.vhost_name }}:{{ vhost_item.value.vhost_port }}
+<VirtualHost {{ vhost_item.value.vhost_name }}:{{ vhost_item.value.vhost_port }}>
+
+    ServerName {{ vhost_item.value.vhost_servername }}
+    ServerAlias {{ vhost_item.value.vhost_serveralias }}
+    {% if vhost_item.value.vhost_proxy %}
+ProxyRequests {{ vhost_item.value.vhost_proxyrequests }}
+    <Proxy {{ vhost_item.value.vhost_proxyfor }}>
+    {% for item in vhost_item.value.vhost_proxyoptions %}
+	{{ item.key}} {{item.value}}
+    {% endfor %}
+</Proxy>
+    {% endif %} 
+
+    {% if vhost_item.value.vhost_location %}
+<Location />
+    {% for item in vhost_item.value.vhost_locationopts %}
+    {{ item.key}} {{item.value}}
+    {% endfor %}
+</Location>
+    {% endif %}
+
+</VirtualHost> 
+
+
