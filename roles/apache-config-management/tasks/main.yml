@@ -11,6 +11,15 @@
   notify:
     - restart_apache
 
+
+- name: Write main apache2.conf file
+  template:
+    src: "config_files/apache2.conf"
+    dest: "/etc/apache2/apache2.conf"
+    force: yes
+  notify:
+    - restart_apache
+
 - name: Enable Apache Modules
   apache2_module:
     name: "{{ item.module }}"
